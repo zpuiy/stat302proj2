@@ -1,8 +1,21 @@
+`stat302proj2` is an `R` package for modeling relative abundance and testing hypotheses about the effect of covariates on relative abundance. The `corncob` methodology was specifically developed for modelling microbial abundances based on high throughput sequencing data, such as 16S or whole-genome sequencing.
+
+
 <!-- badges: start -->
   [![Travis build status](https://travis-ci.com/zpuiy/stat302proj2.svg?branch=master)](https://travis-ci.com/zpuiy/stat302proj2)
   
   [![Codecov test coverage](https://codecov.io/gh/zpuiy/stat302proj2/branch/master/graph/badge.svg)](https://codecov.io/gh/zpuiy/stat302proj2?branch=master)
   <!-- badges: end -->
+  
+## Installation
+
+To download the stat302proj2 package, use the code below.
+
+``` r{eval = FALSE}
+# install.packages("devtools")
+devtools::install_github("zpuiy/stat302proj2")
+library(stat302proj2)
+```
 
 ## Use
 
