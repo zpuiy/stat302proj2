@@ -1,12 +1,12 @@
 Package: stat302proj2
-Title: What the Package Does (One Line, Title Case)
+Title: Stat 302 Project 2
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "First",
            family = "Last",
            role = c("aut", "cre"),
            email = "first.last@example.com")
-Description: What the package does (one paragraph).
+Description: This package contains some functions for data manipulation.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -20,3 +20,4 @@ Suggests:
 Depends: 
     R (>= 2.10)
 VignetteBuilder: knitr
+Imports: stats, dplyr, magrittr, randomForest, class, tibble
