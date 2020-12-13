@@ -1,6 +1,7 @@
 #' T.test Function
 #'
 #' This function performs a one sample t-test in R.
+#'
 #' @param x A numeric vector of data.
 #' @param alternative A character string specifying the alternative hypothesis.
 #' This should only accept "two.sided", "less", or "greater". Otherwise, the
