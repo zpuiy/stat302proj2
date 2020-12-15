@@ -32,11 +32,11 @@ my_t_test <- function(x, alternative, mu) {
   test_stat <- (mean(x) - mu) / se
   # p_val, the numeric p-value
   if (alternative == "two.sided") {
-    p_val <- 2 * pt(abs(test_stat), df, lower.tail = FALSE)
+    p_val <- pt(test_stat, df, lower.tail = TRUE) + pt(abs(test_stat), df, lower.tail = FALSE)
   } else if (alternative == "less") {
     p_val <- pt(test_stat, df, lower.tail = TRUE)
   } else if (alternative == "greater") {
-    p_val <- pt(abs(test_stat), df, lower.tail = FALSE)
+    p_val <- pt(test_stat, df, lower.tail = FALSE)
   } else {
     stop("Alternative value must be 'two.sided', 'less', or 'greater'.")
   }

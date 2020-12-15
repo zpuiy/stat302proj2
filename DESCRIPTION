@@ -2,11 +2,11 @@ Package: stat302proj2
 Title: Stat 302 Project 2
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Peiyao",
+           family = "Zhu",
            role = c("aut", "cre"),
-           email = "first.last@example.com")
-Description: This package contains some functions for data manipulation.
+           email = "pyzhu7@uw.edu")
+Description: This package contains some functions and their tutorials for data manipulation.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -20,4 +20,4 @@ Suggests:
 Depends: 
     R (>= 2.10)
 VignetteBuilder: knitr
-Imports: stats, dplyr, magrittr, randomForest, class, tibble
+Imports: stats, magrittr, randomForest, class, tibble, dplyr, class
