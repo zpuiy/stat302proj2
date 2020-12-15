@@ -25,9 +25,11 @@ This function uses k-Nearest Neighbors Cross-Validation merhosa to predict
 output class using other covariates in R.
 }
 \examples{
-mod_penguins <- penguins \%>\% na.omit()
-input_penguins <- mod_penguins \%>\%
-  select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g)
-my_knn_cv(input_penguins, mod_penguins$species, 1, 5)
+data("my_penguins")
+mod_penguins <- my_penguins \%>\% na.omit()
+species <- as.vector(mod_penguins$species)
+input_penguins <- mod_penguins \%>\% dplyr::select(bill_length_mm, bill_depth_mm,
+ flipper_length_mm, body_mass_g)
+my_knn_cv(input_penguins, species, 1, 5)
 
 }

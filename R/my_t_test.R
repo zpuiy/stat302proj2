@@ -14,8 +14,6 @@
 #' `alternative`: the value of the parameter `alternative`.
 #' `p_val`: the numeric p-value.
 #'
-#' @importFrom stats pt sd
-#'
 #' @examples
 #' set.seed(100)
 #' my_t_test(rnorm(100, mean = 0, sd = 1), "two.sided", 0)

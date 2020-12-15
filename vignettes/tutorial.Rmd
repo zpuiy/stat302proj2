@@ -18,13 +18,14 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(stat302proj2)
 library(ggplot2)
+library(dplyr)
 ```
 
 ### Introduction
 `stat302proj2` is an `R` package for statistical data manipulation, including doing sample t-test, creating linear models, calculating k-Nearest Neighbors Cross-Validation and Random Forest Cross-Validation.
 
 To install this package:
-``` r{eval = FALSE}
+``` {r eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("zpuiy/stat302proj2")
 library(stat302proj2)
@@ -37,7 +38,6 @@ library(stat302proj2)
   H_0: \mu &= 60,\\
   H_a: \mu &\neq 60.
   \end{align}
-  
 ```{r}
 twoSided_life <- my_t_test(my_gapminder$lifeExp, "two.sided", 60)
 twoSided_life
@@ -50,7 +50,6 @@ According the the result the p-value is `r twoSided_life$p_val`, which is greate
   H_0: \mu &= 60,\\
   H_a: \mu &< 60.
   \end{align}
-  
 ```{r}
 less_life <- my_t_test(my_gapminder$lifeExp, "less", 60)
 less_life
@@ -63,7 +62,6 @@ According the the result the p-value is `r less_life$p_val`, which is less than 
   H_0: \mu &= 60,\\
   H_a: \mu &> 60.
   \end{align}
-  
 ```{r}
 greater_life <- my_t_test(my_gapminder$lifeExp, "greater", 60)
 greater_life
@@ -74,7 +72,6 @@ According the the result the p-value is `r greater_life$p_val`, which is greater
 ### A tutorial for `my_lm`
 
 * Demonstrate a regression using `lifeExp` as your response variable and `gdpPercap` and `continent` as explanatory variables.
-
 ```{r} 
 life_reg <- my_lm(lifeExp ~ gdpPercap + continent, my_gapminder)
 life_reg
@@ -83,16 +80,28 @@ life_reg
 The gdpPercap coefficient in the linear regression is `r life_reg[2, 1]`. The gdpPercap coefficient represents the estimate mean increase in life expectancy in year for every additional one unit increase in gdp per captita. If gdp per capita increases by one unit, assuming that the continent remains constant, the expect value of life expectancy will increase by `r life_reg[2, 1]` year.
 
 * The hypothesis test associated with the `gdpPercap` coefficient.
-
 ```{r}
 twoSided_gdp <- my_t_test(my_gapminder$gdpPercap, "two.sided", 0)
 twoSided_gdp
 ```
 
-According the the result the p-value is `r twoSided_gdp$p_val`, which is greater than 0.05, I reject the null hypothesis that the average life expectancy is equal to 60 and accept the alternate hypothesis. Therefore, I conclude that the true mean of life expectancy is not equal to 60.
+According the the result the p-value is `r twoSided_gdp$p_val`, which is greater than 0.05, I failed to reject the null hypothesis that the average life expectancy is equal to 60. Since I have insufficient evidence to reject the null hypothesis, I don't accept any hypothesis. 
+
+```{r}
+less_gdp <- my_t_test(my_gapminder$gdpPercap,"less", 0)
+less_gdp
+```
+
+According the the result the p-value is `r less_gdp$p_val`, which is greater than 0.05, I failed to reject the null hypothesis that the average life expectancy is equal to 60. Since I have insufficient evidence to reject the null hypothesis, I don't accept any hypothesis. 
+
+```{r}
+greater_gdp <- my_t_test(my_gapminder$gdpPercap, "greater", 0)
+greater_gdp
+```
+
+According the the result the p-value is `r greater_gdp$p_val`, which is less than 0.05, I reject the null hypothesis that the average life expectancy is equal to 60 and conclude that the true mean of life expectancy is not equal 60.
 
 * Use `ggplot2` to plot the Actual vs. Fitted values.
-
 ```{r}
 mod_fits <- fitted(lm(lifeExp ~ gdpPercap + continent, my_gapminder))
 my_df <- data.frame(actual = my_gapminder$lifeExp, fitted = mod_fits)
@@ -109,9 +118,21 @@ The slope of the fitted value is generally goes well with the trend of the actua
 
 * Predict output class `species` using covariates `bill_length_mm`, `bill_depth_mm`, `flipper_length_mm`, and `body_mass_g`. 
 * Use $5$-fold cross validation (`k_cv = 5`).
+* Iterate from `k_nn`$= 1,\ldots, 10$:
+    * For each value of `k_nn`, record the training misclassification rate and the CV misclassification rate (output from your function).
 ```{r}
-mod_penguins <- penguins %>% na.omit()
+err_table <- matrix(data = NA, nrow = 10, ncol = 2)
+rownames(err_table) <- c("k_nn = 1", "k_nn = 2", "k_nn = 3", "k_nn = 4", 
+                         "k_nn = 5", "k_nn = 6", "k_nn = 7", "k_nn = 8",
+                         "k_nn = 9", "k_nn = 10")
+colnames(err_table) <- c("CV misclassification error", "Training error")
+mod_penguins <- my_penguins %>% na.omit()
 input_penguins <- mod_penguins %>% 
   select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g)
-my_knn_cv(input_penguins, mod_penguins$species, 1, 5)
+for (i in 1:10) {
+  err_table[i, 1] <- my_knn_cv(input_penguins, mod_penguins$species, 1, 5)$cv_err
+  err_table[i, 2] <- my_knn_cv(input_penguins, mod_penguins$species, 1, 5)$train_err
+}
+err_table
 ```
+

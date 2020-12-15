@@ -12,13 +12,13 @@
 #' `class` A vector of the predicted class Ŷ i for all observation.
 #' `cv_err` A numeric with the cross-validation misclassification error.
 #'
-#' @importFrom tidyverse
-#'
 #' @examples
-#' mod_penguins <- penguins %>% na.omit()
-#' input_penguins <- mod_penguins dplyr::%>%
-#'   select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g)
-#' my_knn_cv(input_penguins, mod_penguins$species, 1, 5)
+#' data("my_penguins")
+#' mod_penguins <- my_penguins %>% na.omit()
+#' species <- as.vector(mod_penguins$species)
+#' input_penguins <- mod_penguins %>% dplyr::select(bill_length_mm, bill_depth_mm,
+#'  flipper_length_mm, body_mass_g)
+#' my_knn_cv(input_penguins, species, 1, 5)
 #'
 #' @export
 my_knn_cv <- function(train, cl, k_nn, k_cv) {
@@ -28,14 +28,14 @@ my_knn_cv <- function(train, cl, k_nn, k_cv) {
   data <- cbind("cl" = cl, "split" = fold, train)
   t_class <- c()
   for (i in 1:k_cv) {
-    data_train <- data %>% filter(split != i)
+    data_train <- data %>% dplyr::filter(split != i)
     input_cl <- as.vector(data_train$cl)
-    data_test <- data %>% filter(split == i)
+    data_test <- data %>% dplyr::filter(split == i)
     true_cl <- as.vector(data_test$cl)
     t_class <- c(t_class, true_cl)
     data_test <- data_test[, -c(1:2)]
     data_train <- data_train[, -c(1:2)]
-    pred <- knn(data_train, data_test, input_cl, k = k_nn, prob = FALSE)
+    pred <- class::knn(data_train, data_test, input_cl, k = k_nn, prob = FALSE)
     class <- c(class, as.vector(pred))
     cv_err[i] <- sum(as.numeric(pred != true_cl)) / length(true_cl)
   }

@@ -8,8 +8,6 @@
 #' @return a `table` with rows for each coefficient (including the (`Intercept`)!)
 #' and columns for the `Estimate`, `Std. Error`, `t value`, and `Pr(>|t|)`.
 #'
-#' @importFrom stats model.frame model.matrix model.response
-#'
 #' @examples
 #' data("mtcars")
 #' my_lm(mpg ~ hp + wt, mtcars)
