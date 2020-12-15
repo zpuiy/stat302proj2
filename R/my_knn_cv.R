@@ -11,6 +11,7 @@
 #' @return a `list` with object:
 #' `class` A vector of the predicted class Ŷ i for all observation.
 #' `cv_err` A numeric with the cross-validation misclassification error.
+#' `train_err` A numeric with the training error.
 #'
 #' @examples
 #' data("my_penguins")
@@ -37,9 +38,9 @@ my_knn_cv <- function(train, cl, k_nn, k_cv) {
     data_train <- data_train[, -c(1:2)]
     pred <- class::knn(data_train, data_test, input_cl, k = k_nn, prob = FALSE)
     class <- c(class, as.vector(pred))
-    cv_err[i] <- sum(as.numeric(pred != true_cl)) / length(true_cl)
+    cv_err[i] <- sum(as.numeric(pred != true_cl)^2) / length(true_cl)
   }
   cv_error <- mean(cv_err)
-  train_err <- sum(as.numeric(t_class != class)) / nrow(train)
+  train_err <- sum(as.numeric(t_class != class)^2) / nrow(train)
   return(list("class" = class, "cv_err" = cv_error, "train_err" = train_err))
 }

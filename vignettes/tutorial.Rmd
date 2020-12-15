@@ -130,9 +130,15 @@ mod_penguins <- my_penguins %>% na.omit()
 input_penguins <- mod_penguins %>% 
   select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g)
 for (i in 1:10) {
-  err_table[i, 1] <- my_knn_cv(input_penguins, mod_penguins$species, 1, 5)$cv_err
-  err_table[i, 2] <- my_knn_cv(input_penguins, mod_penguins$species, 1, 5)$train_err
+  err_table[i, 1] <- my_knn_cv(input_penguins, mod_penguins$species, i, 5)$cv_err
+  err_table[i, 2] <- my_knn_cv(input_penguins, mod_penguins$species, i, 5)$train_err
 }
 err_table
 ```
+
+Based on the CV misclassification error rates, I would choose the 1-nearest neighbor model. Based on the training error rates,I would choose the 1-nearest neighbor model.
+I would choose the 1-nearest neighbor model because it has lower CV misclassification error rate and lower training error rate.
+The process of cross-validation splits data into k folds, then use all but 1 fold as the training data and fit the model. The remaining fold for the test data and make predictions. It switches which fold is the test data until all folds have been test data (k times). After making predictions, it calculates the CV error. It is useful because it allows us to choose among several models based on this test error in order to find the best model for making predictions.
+
+### A tutorial for `my_rf_cv`
 
