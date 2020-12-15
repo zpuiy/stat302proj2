@@ -7,11 +7,12 @@
 #' @param cl A true class value of your training data.
 #' @param k_nn An integer representing the number of neighbors.
 #' @param k_cv An integer representing the number of folds.
+#' @keywords prediction
 #'
-#' @return a `list` with object:
-#' `class` A vector of the predicted class Ŷ i for all observation.
-#' `cv_err` A numeric with the cross-validation misclassification error.
-#' `train_err` A numeric with the training error.
+#' @return A list with object:
+#' `class`: A vector of the predicted class Ŷ i for all observation.
+#' `cv_err`: A numeric with the cross-validation misclassification error.
+#' `train_err`: A numeric with the training error.
 #'
 #' @examples
 #' data("my_penguins")

@@ -43,7 +43,7 @@ twoSided_life <- my_t_test(my_gapminder$lifeExp, "two.sided", 60)
 twoSided_life
 ```
   
-According the the result the p-value is `r twoSided_life$p_val`, which is greater than 0.05, I fail to reject the null hypothesis that the average life expectancy is equal to 60. Since I have insufficient evidence to reject the null hypothesis, I don't accept any hypothesis. 
+According to the result, the p-value is `r twoSided_life$p_val`, which is greater than 0.05. I fail to reject the null hypothesis that the average life expectancy is equal to 60. Since I have insufficient evidence to reject the null hypothesis, I don't accept any hypothesis. 
   
   * Demonstrate a test of the hypothesis
   \begin{align}
@@ -55,7 +55,7 @@ less_life <- my_t_test(my_gapminder$lifeExp, "less", 60)
 less_life
 ```
 
-According the the result the p-value is `r less_life$p_val`, which is less than 0.05, I reject the null hypothesis that the average life expectancy is equal to 60 and conclude that the true mean of life expectancy is not equal 60.
+According to the result, the p-value is `r less_life$p_val`, which is less than 0.05. I reject the null hypothesis that the average life expectancy is equal to 60 and conclude that the true mean of life expectancy is not equal 60.
 
   *  Demonstrate a test of the hypothesis
   \begin{align}
@@ -67,7 +67,7 @@ greater_life <- my_t_test(my_gapminder$lifeExp, "greater", 60)
 greater_life
 ```
 
-According the the result the p-value is `r greater_life$p_val`, which is greater than 0.05, I failed to reject the null hypothesis that the average life expectancy is equal to 60. Since I have insufficient evidence to reject the null hypothesis, I don't accept any hypothesis. 
+According to the result, the p-value is `r greater_life$p_val`, which is greater than 0.05. I failed to reject the null hypothesis that the average life expectancy is equal to 60. Since I have insufficient evidence to reject the null hypothesis, I don't accept any hypothesis. 
 
 ### A tutorial for `my_lm`
 
@@ -80,26 +80,8 @@ life_reg
 The gdpPercap coefficient in the linear regression is `r life_reg[2, 1]`. The gdpPercap coefficient represents the estimate mean increase in life expectancy in year for every additional one unit increase in gdp per captita. If gdp per capita increases by one unit, assuming that the continent remains constant, the expect value of life expectancy will increase by `r life_reg[2, 1]` year.
 
 * The hypothesis test associated with the `gdpPercap` coefficient.
-```{r}
-twoSided_gdp <- my_t_test(my_gapminder$gdpPercap, "two.sided", 0)
-twoSided_gdp
-```
 
-According the the result the p-value is `r twoSided_gdp$p_val`, which is greater than 0.05, I failed to reject the null hypothesis that the average life expectancy is equal to 60. Since I have insufficient evidence to reject the null hypothesis, I don't accept any hypothesis. 
-
-```{r}
-less_gdp <- my_t_test(my_gapminder$gdpPercap,"less", 0)
-less_gdp
-```
-
-According the the result the p-value is `r less_gdp$p_val`, which is greater than 0.05, I failed to reject the null hypothesis that the average life expectancy is equal to 60. Since I have insufficient evidence to reject the null hypothesis, I don't accept any hypothesis. 
-
-```{r}
-greater_gdp <- my_t_test(my_gapminder$gdpPercap, "greater", 0)
-greater_gdp
-```
-
-According the the result the p-value is `r greater_gdp$p_val`, which is less than 0.05, I reject the null hypothesis that the average life expectancy is equal to 60 and conclude that the true mean of life expectancy is not equal 60.
+According to the result, the p-value is `r life_reg[2, 4]`, which is less than 0.05. Therefore, I reject the null hypothesis that the coefficient for gdp per capita is equal to 0 and conclude that the coefficient for gdp per capita is not equal 60.
 
 * Use `ggplot2` to plot the Actual vs. Fitted values.
 ```{r}
@@ -141,4 +123,23 @@ I would choose the 1-nearest neighbor model because it has lower CV misclassific
 The process of cross-validation splits data into k folds, then use all but 1 fold as the training data and fit the model. The remaining fold for the test data and make predictions. It switches which fold is the test data until all folds have been test data (k times). After making predictions, it calculates the CV error. It is useful because it allows us to choose among several models based on this test error in order to find the best model for making predictions.
 
 ### A tutorial for `my_rf_cv`
+* Predict `body_mass_g` using covariates `bill_length_mm`, `bill_depth_mm`, and `flipper_length_mm`. 
+* Iterate through `k` in  `c(2, 5, 10)`:
+    * For each value of `k`, run your function $30$ times. 
+    * For each of the $30$ iterations, store the CV estimated MSE.
+```{r}
+cv_estimate <- matrix(data = NA, nrow = 30, ncol = 3)
+colnames(cv_estimate) <- c("", "Training error")
+colnum <- 1
+for (i in c(2, 5, 10)) {
+  for (j in 1:30) {
+    cv_estimate[j, colnum] <- my_rf_cv(i)
+  }
+  colnum <- colnum + 1
+}
+```
 
+* Use `ggplot2` with 3 boxplots to display these data in an informative way. There should be a boxplot associated with each value of `k`, representing $30$ simulations each.
+```{r}
+table(cv_estimate)
+```

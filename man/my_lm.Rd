@@ -12,7 +12,7 @@ my_lm(formula, data)
 \item{data}{input data frame.}
 }
 \value{
-a \code{table} with rows for each coefficient (including the (\code{Intercept})!)
+A table with rows for each coefficient (including the (\code{Intercept})!)
 and columns for the \code{Estimate}, \verb{Std. Error}, \verb{t value}, and \verb{Pr(>|t|)}.
 }
 \description{

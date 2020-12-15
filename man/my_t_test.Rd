@@ -16,11 +16,11 @@ function should throw an informative error.}
 \item{mu}{A number indicating the null hypothesis value of the mean.}
 }
 \value{
-a \code{list} with elements:
-\code{test_stat}: the numeric test statistic.
-\code{df}: the degrees of freedom.
-\code{alternative}: the value of the parameter \code{alternative}.
-\code{p_val}: the numeric p-value.
+A list with elements:
+\code{test_stat}: The numeric test statistic.
+\code{df}: The degrees of freedom.
+\code{alternative}: The value of \code{alternative}.
+\code{p_val}: The numeric p-value.
 }
 \description{
 This function performs a one sample t-test in R.

@@ -7,12 +7,13 @@
 #' This should only accept "two.sided", "less", or "greater". Otherwise, the
 #' function should throw an informative error.
 #' @param mu A number indicating the null hypothesis value of the mean.
+#' @keywords inference
 #'
-#' @return a `list` with elements:
-#' `test_stat`: the numeric test statistic.
-#' `df`: the degrees of freedom.
-#' `alternative`: the value of the parameter `alternative`.
-#' `p_val`: the numeric p-value.
+#' @return A list with elements:
+#' `test_stat`: The numeric test statistic.
+#' `df`: The degrees of freedom.
+#' `alternative`: The value of \code{alternative}.
+#' `p_val`: The numeric p-value.
 #'
 #' @examples
 #' set.seed(100)
