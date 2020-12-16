@@ -16,9 +16,11 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
+# Load all packages
 library(stat302proj2)
 library(ggplot2)
 library(dplyr)
+# Load all data sets
 data("my_gapminder")
 data("my_penguins")
 ```
@@ -40,6 +42,9 @@ library(stat302proj2)
   H_a: \mu &\neq 60.
   \end{align}
 ```{r}
+# Run a sample t-test for the life expectancy data with null hypothesis that 
+#  true mean equals to 60 and alternative hypothesis that true mean not equals 
+#  to 60.
 twoSided_life <- my_t_test(my_gapminder$lifeExp, "two.sided", 60)
 twoSided_life
 ```
@@ -52,6 +57,9 @@ According to the result, the p-value is `r twoSided_life$p_val`, which is greate
   H_a: \mu &< 60.
   \end{align}
 ```{r}
+# Run a sample t-test for the life expectancy data with null hypothesis that 
+#  true mean equals to 60 and alternative hypothesis that true mean is less than 
+#  60.
 less_life <- my_t_test(my_gapminder$lifeExp, "less", 60)
 less_life
 ```
@@ -64,6 +72,9 @@ According to the result, the p-value is `r less_life$p_val`, which is less than 
   H_a: \mu &> 60.
   \end{align}
 ```{r}
+# Run a sample t-test for the life expectancy data with null hypothesis that 
+#  true mean equals to 60 and alternative hypothesis that true mean is greater 
+#  than 60.
 greater_life <- my_t_test(my_gapminder$lifeExp, "greater", 60)
 greater_life
 ```
@@ -74,7 +85,11 @@ According to the result, the p-value is `r greater_life$p_val`, which is greater
 
 * Demonstrate a regression using `lifeExp` as your response variable and `gdpPercap` and `continent` as explanatory variables.
 ```{r} 
+# Demonstrate a linear regression with my_gapminder data, using the life
+#  expectancy data as response variable, gdp per capita and continent data
+#  as explanatory variables. Store the result table in life_reg.
 life_reg <- my_lm(lifeExp ~ gdpPercap + continent, my_gapminder)
+# Print life_reg
 life_reg
 ```
 
@@ -86,8 +101,13 @@ According to the result, the p-value is `r life_reg[2, 4]`, which is less than 0
 
 * Use `ggplot2` to plot the Actual vs. Fitted values.
 ```{r}
+# Store the fitted value of the linear regression data with my_gapminder data, 
+#  using the life expectancy data as response variable, gdp per capita and 
+#  continent data as explanatory variables.
 mod_fits <- fitted(lm(lifeExp ~ gdpPercap + continent, my_gapminder))
+# Create a data frame for the actual life expectancy data and the fitted data.
 my_df <- data.frame(actual = my_gapminder$lifeExp, fitted = mod_fits)
+# Plot the the Actual vs. Fitted values
 ggplot(my_df, aes(x = fitted, y = actual)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, col = "red", lty = 2) + 
@@ -105,23 +125,34 @@ The slope of the fitted value is generally goes well with the trend of the actua
 * Iterate from `k_nn`$= 1,\ldots, 10$:
     * For each value of `k_nn`, record the training misclassification rate and the CV misclassification rate (output from your function).
 ```{r}
+# Create an empty matrix to store the misclassification error and the 
+#  training error for every k nearest neighbor values.
 err_table <- matrix(data = NA, nrow = 10, ncol = 2)
 rownames(err_table) <- c("k_nn = 1", "k_nn = 2", "k_nn = 3", "k_nn = 4", 
                          "k_nn = 5", "k_nn = 6", "k_nn = 7", "k_nn = 8",
                          "k_nn = 9", "k_nn = 10")
 colnames(err_table) <- c("CV misclassification error", "Training error")
+# Omit the na values in my_penguins
 mod_penguins <- my_penguins %>% na.omit()
 input_penguins <- mod_penguins %>% 
   select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g)
+# Perform k nearest neighbor using 5-fold cross validation of k nearest neighbor
+#  values from 1 to 10. Predict species using covariates bill_length_mm,
+#  bill_depth_mm, flipper_length_mm, body_mass_g. Store the cv error and 
+#  training error for each trial in err_table.
 for (i in 1:10) {
+  pred <- my_knn_cv(input_penguins, mod_penguins$species, i, 5)$class
   err_table[i, 1] <- my_knn_cv(input_penguins, mod_penguins$species, i, 5)$cv_err
-  err_table[i, 2] <- my_knn_cv(input_penguins, mod_penguins$species, i, 5)$train_err
+  err_table[i, 2] <- sum(as.numeric(pred != mod_penguins$species)) / 
+    nrow(mod_penguins)
 }
+err_table <- as.data.frame(err_table)
+# Print err_table
 err_table
 ```
 
 Based on the CV misclassification error rates, I would choose the 1-nearest neighbor model. Based on the training error rates,I would choose the 1-nearest neighbor model.
-I would choose the 1-nearest neighbor model because it has lower CV misclassification error rate and lower training error rate.
+I would choose the 1-nearest neighbor model in practice because it has the lowest CV misclassification error rate and lower training error rate.
 The process of cross-validation splits data into k folds, then use all but 1 fold as the training data and fit the model. The remaining fold for the test data and make predictions. It switches which fold is the test data until all folds have been test data (k times). After making predictions, it calculates the CV error. It is useful because it allows us to choose among several models based on this test error in order to find the best model for making predictions.
 
 ### A tutorial for `my_rf_cv`
@@ -130,8 +161,12 @@ The process of cross-validation splits data into k folds, then use all but 1 fol
     * For each value of `k`, run your function $30$ times. 
     * For each of the $30$ iterations, store the CV estimated MSE.
 ```{r}
+# Create an empty list to store the CV estimated MSE.
 cv_estimate <- list()
+# Track trials with same values of k.
 trial <- 1
+# Iterate through k in values of 2, 5 and 10. For each k iterate 30 times and 
+#  for record every estimated CV MSE in cv_estimate
 for (i in c(2, 5, 10)) {
   mse <- rep(NA, 30)
   for (j in 1:30) {
@@ -144,20 +179,24 @@ for (i in c(2, 5, 10)) {
 
 * Use `ggplot2` with 3 boxplots to display these data in an informative way. There should be a boxplot associated with each value of `k`, representing $30$ simulations each.
 ```{r}
+# Store all the CV MSE data in a data frame with their according k value called
+#  my_cv
 category <- c(rep("2", 30), rep("5", 30), rep("10", 30))
 mse <- c(cv_estimate[[1]], cv_estimate[[2]], cv_estimate[[3]])
 my_cv <- data.frame("k" = category, "CV_MSE" = mse)
+# Plot 3 separate boxplots for CV MSE of different k value
 ggplot(data = my_cv, aes(x = k, y = CV_MSE)) +
   geom_boxplot(aes(group = k), fill = "lightblue") +
   labs(title = "CV MSE by k value", 
-       x = "", 
-       y = "") +
-  theme(plot.title =
-          element_text(hjust = 0.5))
+       x = "k vlaue", 
+       y = "CV MSE") +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 * Use a table to display the average CV estimate and the standard deviation of the CV estimates across $k$. Your table should have 3 rows (one for each value of $k$) and 2 columns (one for the mean and the other for the standard deviation).
 ```{r}
+# Store the average CV MSE and their according standard deviation in a data
+#  frame called average_cv
 average_cv <- matrix(NA, nrow = 3, ncol = 2)
 rownames(average_cv) <- c("k = 2", "k = 5", "k = 10")
 colnames(average_cv) <- c("average CV MSE", "standard deviation")
@@ -168,6 +207,7 @@ average_cv[2, 2] <- sd(cv_estimate[[2]])
 average_cv[3, 1] <- mean(cv_estimate[[3]])
 average_cv[3, 2] <- sd(cv_estimate[[3]])
 average_cv <- as.data.frame(average_cv)
+# Print average_cv
 average_cv
 ```
 

@@ -19,7 +19,6 @@ my_knn_cv(train, cl, k_nn, k_cv)
 A list with object:
 \code{class}: A vector of the predicted class Ŷ i for all observation.
 \code{cv_err}: A numeric with the cross-validation misclassification error.
-\code{train_err}: A numeric with the training error.
 }
 \description{
 This function uses k-Nearest Neighbors Cross-Validation merhosa to predict

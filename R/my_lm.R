@@ -43,6 +43,6 @@ my_lm <- function(formula, data) {
   colnames(result) <- c("Estimate", "Std. Error", "t value", "Pr(>|t|)")
   rownames(result) <- rownames(estimates)
   # Transform the result matrix into table
-  data.frame(result)
+  result <- as.data.frame(result)
   return(result)
 }
