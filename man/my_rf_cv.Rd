@@ -21,3 +21,4 @@ covariates \code{bill_length_mm}, \code{bill_depth_mm}, and \code{flipper_length
 my_rf_cv(5)
 
 }
+\keyword{prediction}

@@ -1,4 +1,4 @@
-`stat302proj2` is an `R` package for statistical data manipulation, including doing sample t-test, creating linear models, calculating k-Nearest Neighbors Cross-Validation and Random Forest Cross-Validation.
+`stat302proj2` is an `R` package for making statistical data prediction and testing hypothesis of data distribution. This package includs functions for doing sample t-test, creating linear models, calculating k-Nearest Neighbors Cross-Validation and Random Forest Cross-Validation.
 
 <!-- badges: start -->
   [![Travis build status](https://travis-ci.com/zpuiy/stat302proj2.svg?branch=master)](https://travis-ci.com/zpuiy/stat302proj2)

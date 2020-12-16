@@ -32,3 +32,4 @@ my_t_test(rnorm(100, mean = 0, sd = 1), "less", 0)
 my_t_test(rnorm(100, mean = 0, sd = 1), "greater", 0)
 
 }
+\keyword{inference}

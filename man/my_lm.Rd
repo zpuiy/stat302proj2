@@ -23,3 +23,4 @@ data("mtcars")
 my_lm(mpg ~ hp + wt, mtcars)
 
 }
+\keyword{inference}

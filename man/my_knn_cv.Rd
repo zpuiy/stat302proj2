@@ -34,3 +34,4 @@ input_penguins <- mod_penguins \%>\% dplyr::select(bill_length_mm, bill_depth_mm
 my_knn_cv(input_penguins, species, 1, 5)
 
 }
+\keyword{prediction}

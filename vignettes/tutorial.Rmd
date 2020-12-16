@@ -22,9 +22,9 @@ library(dplyr)
 ```
 
 ### Introduction
-`stat302proj2` is an `R` package for statistical data manipulation, including doing sample t-test, creating linear models, calculating k-Nearest Neighbors Cross-Validation and Random Forest Cross-Validation.
+`stat302proj2` is an `R` package for making statistical data prediction and testing hypothesis of data distribution. This package includs functions for doing sample t-test, creating linear models, calculating k-Nearest Neighbors Cross-Validation and Random Forest Cross-Validation.
 
-To install this package:
+Install \texttt{stat302proj2} using:
 ``` {r eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("zpuiy/stat302proj2")
@@ -32,7 +32,6 @@ library(stat302proj2)
 ```
 
 ### A tutorial for `my_t.test`
-
 * Demonstrate a test of the hypothesis
   \begin{align}
   H_0: \mu &= 60,\\
@@ -128,18 +127,45 @@ The process of cross-validation splits data into k folds, then use all but 1 fol
     * For each value of `k`, run your function $30$ times. 
     * For each of the $30$ iterations, store the CV estimated MSE.
 ```{r}
-cv_estimate <- matrix(data = NA, nrow = 30, ncol = 3)
-colnames(cv_estimate) <- c("", "Training error")
-colnum <- 1
+cv_estimate <- list()
+trial <- 1
 for (i in c(2, 5, 10)) {
+  mse <- rep(NA, 30)
   for (j in 1:30) {
-    cv_estimate[j, colnum] <- my_rf_cv(i)
+    mse[j] <- my_rf_cv(i)
   }
-  colnum <- colnum + 1
+  cv_estimate[[trial]] <- mse
+  trial <- trial + 1
 }
 ```
 
 * Use `ggplot2` with 3 boxplots to display these data in an informative way. There should be a boxplot associated with each value of `k`, representing $30$ simulations each.
 ```{r}
-table(cv_estimate)
+category <- c(rep("2", 30), rep("5", 30), rep("10", 30))
+mse <- c(cv_estimate[[1]], cv_estimate[[2]], cv_estimate[[3]])
+my_cv <- data.frame("k" = category, "CV_MSE" = mse)
+ggplot(data = my_cv, aes(x = k, y = CV_MSE)) +
+  geom_boxplot(aes(group = k), fill = "lightblue") +
+  labs(title = "CV MSE by k value", 
+       x = "", 
+       y = "") +
+  theme(plot.title =
+          element_text(hjust = 0.5))
 ```
+
+* Use a table to display the average CV estimate and the standard deviation of the CV estimates across $k$. Your table should have 3 rows (one for each value of $k$) and 2 columns (one for the mean and the other for the standard deviation).
+```{r}
+average_cv <- matrix(NA, nrow = 3, ncol = 2)
+rownames(average_cv) <- c("k = 2", "k = 5", "k = 10")
+colnames(average_cv) <- c("average CV MSE", "standard deviation")
+average_cv[1, 1] <- mean(cv_estimate[[1]])
+average_cv[1, 2] <- sd(cv_estimate[[1]])
+average_cv[2, 1] <- mean(cv_estimate[[2]])
+average_cv[2, 2] <- sd(cv_estimate[[2]])
+average_cv[3, 1] <- mean(cv_estimate[[3]])
+average_cv[3, 2] <- sd(cv_estimate[[3]])
+average_cv <- as.data.frame(average_cv)
+average_cv
+```
+
+I observe tht as the k value gets larger, the range, average value and standard deviation of the CV estimated MSE gets smaller. From the boxplot, I also observe that as k gets larger, the overall values of CV estimated MSE tends to get smaller. As we split data in to more folds, we will get predictions that are closer to the actual results, therefore, the variance of our prediction will get smaller. 
