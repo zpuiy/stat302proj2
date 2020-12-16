@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
 library(stat302proj2)
 library(ggplot2)
 library(dplyr)
+library(class)
 # Load all data sets
 data("my_gapminder")
 data("my_penguins")

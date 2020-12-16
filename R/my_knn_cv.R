@@ -27,11 +27,11 @@ my_knn_cv <- function(train, cl, k_nn, k_cv){
   data <- data.frame("x" = train, "y" = cl, "split" = fold, "n" = 1:length(cl))
   cv_err <- rep(NA, k_cv)
   for (i in 1:k_cv) {
-    train_df <- data %>% filter(split != i)
-    test_df <- data %>% filter(split == i)
-    pred <- knn(train_df[, 1:4], test_df[, 1:4], train_df$y, k = k_nn)
+    train_df <- data %>% dplyr::filter(split != i)
+    test_df <- data %>% dplyr::filter(split == i)
+    pred <- class::knn(train_df[, 1:4], test_df[, 1:4], train_df$y, k = k_nn)
     cv_err[i] <- sum(as.numeric(as.character(pred) != test_df$y)) / nrow(test_df)
   }
-  all_pred <- knn(train = train, test = train, cl, k = k_nn)
+  all_pred <- class::knn(train = train, test = train, cl, k = k_nn)
   return(list("class" = all_pred, "cv_err" = mean(cv_err)))
 }
