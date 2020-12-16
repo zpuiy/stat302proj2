@@ -168,4 +168,4 @@ average_cv <- as.data.frame(average_cv)
 average_cv
 ```
 
-I observe tht as the k value gets larger, the range, average value and standard deviation of the CV estimated MSE gets smaller. From the boxplot, I also observe that as k gets larger, the overall values of CV estimated MSE tends to get smaller. As we split data in to more folds, we will get predictions that are closer to the actual results, therefore, the variance of our prediction will get smaller. 
+I observe that as the k value gets larger, the range, average value and standard deviation of the CV estimated MSE gets smaller. From the boxplot, I also observe that as k gets larger, the overall values of CV estimated MSE tends to get smaller. As we split data in to more folds, we will get predictions that are closer to the actual results, therefore, the variance of our prediction will get smaller. 
