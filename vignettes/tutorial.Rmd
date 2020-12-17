@@ -27,7 +27,7 @@ data("my_penguins")
 ```
 
 ### Introduction
-`stat302proj2` is an `R` package for making statistical data prediction and testing hypothesis of data distribution. This package includs functions for doing sample t-test, creating linear models, calculating k-Nearest Neighbors Cross-Validation and Random Forest Cross-Validation.
+`stat302proj2` is an `R` package for making statistical data prediction and testing hypothesis of data distribution. It allows you to demonstrate hypothesis, building linear models and make predictions with covariates. This package includes functions for doing sample t-test, creating linear models, calculating k-Nearest Neighbors Cross-Validation and Random Forest Cross-Validation.
 
 Install \texttt{stat302proj2} using:
 ``` {r eval = FALSE}
@@ -50,7 +50,7 @@ twoSided_life <- my_t_test(my_gapminder$lifeExp, "two.sided", 60)
 twoSided_life
 ```
   
-According to the result, the p-value is `r twoSided_life$p_val`, which is greater than 0.05. I fail to reject the null hypothesis that the average life expectancy is equal to 60. Since I have insufficient evidence to reject the null hypothesis, I don't accept any hypothesis. 
+According to the result, the p-value is `r twoSided_life$p_val`, which is greater than 0.05. I fail to reject the null hypothesis that the average life expectancy is equal to 60. There is insufficient evidence to reject the null hypothesis. There is no significant evidence that the true mean of life expectancy lean towards less than 60 or greater than 60.
   
   * Demonstrate a test of the hypothesis
   \begin{align}
@@ -65,7 +65,7 @@ less_life <- my_t_test(my_gapminder$lifeExp, "less", 60)
 less_life
 ```
 
-According to the result, the p-value is `r less_life$p_val`, which is less than 0.05. I reject the null hypothesis that the average life expectancy is equal to 60 and conclude that the true mean of life expectancy is not equal 60.
+According to the result, the p-value is `r less_life$p_val`, which is less than 0.05. I reject the null hypothesis that the average life expectancy equals to 60 and conclude that the true mean of life expectancy does not equal 60.
 
   *  Demonstrate a test of the hypothesis
   \begin{align}
@@ -80,8 +80,7 @@ greater_life <- my_t_test(my_gapminder$lifeExp, "greater", 60)
 greater_life
 ```
 
-According to the result, the p-value is `r greater_life$p_val`, which is greater than 0.05. I failed to reject the null hypothesis that the average life expectancy is equal to 60. Since I have insufficient evidence to reject the null hypothesis, I don't accept any hypothesis. 
-
+According to the result, the p-value is `r greater_life$p_val`, which is greater than 0.05. I failed to reject the null hypothesis that the average life expectancy is equal to 60. There is insufficient evidence to reject the null hypothesis. There is no significant evidence that the true mean of life expectancy lean towards greater than 60.
 ### A tutorial for `my_lm`
 
 * Demonstrate a regression using `lifeExp` as your response variable and `gdpPercap` and `continent` as explanatory variables.
@@ -94,30 +93,30 @@ life_reg <- my_lm(lifeExp ~ gdpPercap + continent, my_gapminder)
 life_reg
 ```
 
-The gdpPercap coefficient in the linear regression is `r life_reg[2, 1]`. The gdpPercap coefficient represents the estimate mean increase in life expectancy in year for every additional one unit increase in gdp per captita. If gdp per capita increases by one unit, assuming that the continent remains constant, the expect value of life expectancy will increase by `r life_reg[2, 1]` year.
+The gdpPercap coefficient in the linear regression is `r life_reg[2, 1]`. The gdpPercap coefficient represents the estimate average increase in life expectancy per year for every additional one unit increase in gdp per captita. If gdp per capita increases by one unit, assuming that the continent remains constant, the expect value of life expectancy will increase by `r life_reg[2, 1]` year.
 
 * The hypothesis test associated with the `gdpPercap` coefficient.
 
-According to the result, the p-value is `r life_reg[2, 4]`, which is less than 0.05. Therefore, I reject the null hypothesis that the coefficient for gdp per capita is equal to 0 and conclude that the coefficient for gdp per capita is not equal 60.
+According to the result, the p-value for gdp per capita coefficient is `r life_reg[2, 4]`, which is less than 0.05. Therefore, I reject the null hypothesis that the coefficient for gdp per capita equals to 0 and conclude that the coefficient for gdp per capita does not equal to 0.
 
 * Use `ggplot2` to plot the Actual vs. Fitted values.
 ```{r}
-# Store the fitted value of the linear regression data with my_gapminder data, 
-#  using the life expectancy data as response variable, gdp per capita and 
-#  continent data as explanatory variables.
+# Extract the fitted value for the life expectancy data with my_gapminder data, 
+#  using the linear regression model of  life expectancy data as response 
+#  variable, gdp per capita and continent data as explanatory variables.
 mod_fits <- fitted(lm(lifeExp ~ gdpPercap + continent, my_gapminder))
 # Create a data frame for the actual life expectancy data and the fitted data.
 my_df <- data.frame(actual = my_gapminder$lifeExp, fitted = mod_fits)
 # Plot the the Actual vs. Fitted values
 ggplot(my_df, aes(x = fitted, y = actual)) +
-  geom_point() +
-  geom_abline(slope = 1, intercept = 0, col = "red", lty = 2) + 
+  geom_point(size = 0.75) +
+  geom_abline(slope = 1, intercept = 0, col = "red", lty = 2, size = 1) + 
   theme_bw(base_size = 15) +
   labs(x = "Fitted values", y = "Actual values", title = "Actual vs. Fitted") +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-The slope of the fitted value is generally goes well with the trend of the actual value, however, the model seems to overpredict low values and under predict high values of the life expectancy. The actual and predicted life expectancy doesn't seem very correlated.
+The plot sugguests that, the actual values and the fitted values of the life expectancy is correlated. However, the actual life expectancy has a high variance.
 
 ### A tutorial for `my_knn_cv` using `my_penguins`
 
@@ -141,10 +140,10 @@ input_penguins <- mod_penguins %>%
 #  values from 1 to 10. Predict species using covariates bill_length_mm,
 #  bill_depth_mm, flipper_length_mm, body_mass_g. Store the cv error and 
 #  training error for each trial in err_table.
-for (i in 1:10) {
-  pred <- my_knn_cv(input_penguins, mod_penguins$species, i, 5)$class
-  err_table[i, 1] <- my_knn_cv(input_penguins, mod_penguins$species, i, 5)$cv_err
-  err_table[i, 2] <- sum(as.numeric(pred != mod_penguins$species)) / 
+for (k_nn in 1:10) {
+  pred <- my_knn_cv(input_penguins, mod_penguins$species, k_nn, 5)$class
+  err_table[k_nn, 1] <- my_knn_cv(input_penguins, mod_penguins$species, k_nn, 5)$cv_err
+  err_table[k_nn, 2] <- sum(as.numeric(pred != mod_penguins$species)) / 
     nrow(mod_penguins)
 }
 err_table <- as.data.frame(err_table)
@@ -153,7 +152,9 @@ err_table
 ```
 
 Based on the CV misclassification error rates, I would choose the 1-nearest neighbor model. Based on the training error rates,I would choose the 1-nearest neighbor model.
-I would choose the 1-nearest neighbor model in practice because it has the lowest CV misclassification error rate and lower training error rate.
+
+I would choose the 1-nearest neighbor model in practice because it has the lowest CV misclassification error rate and lower training error rate which means it makes the best data predictions.
+
 The process of cross-validation splits data into k folds, then use all but 1 fold as the training data and fit the model. The remaining fold for the test data and make predictions. It switches which fold is the test data until all folds have been test data (k times). After making predictions, it calculates the CV error. It is useful because it allows us to choose among several models based on this test error in order to find the best model for making predictions.
 
 ### A tutorial for `my_rf_cv`
@@ -212,4 +213,4 @@ average_cv <- as.data.frame(average_cv)
 average_cv
 ```
 
-I observe that as the k value gets larger, the range, average value and standard deviation of the CV estimated MSE gets smaller. From the boxplot, I also observe that as k gets larger, the overall values of CV estimated MSE tends to get smaller. As we split data in to more folds, we will get predictions that are closer to the actual results, therefore, the variance of our prediction will get smaller. 
+I observe that as the k value gets larger, the range, average value and standard deviation of the CV estimated MSE gets smaller. The boxplots sugguest that that as k gets larger, the overall values of CV estimated MSE tends to get smaller and more centralized. As we split data in to more folds, we will get predictions that are closer to the actual results, therefore, the variance of our prediction will get smaller. 
