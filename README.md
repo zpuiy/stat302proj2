@@ -1,3 +1,4 @@
+# stat302proj2
 `stat302proj2` is an `R` package for making statistical data prediction and testing hypothesis of data distribution. This package includs functions for doing sample t-test, creating linear models, calculating k-Nearest Neighbors Cross-Validation and Random Forest Cross-Validation.
 
 <!-- badges: start -->
