@@ -17,7 +17,7 @@ my_knn_cv(train, cl, k_nn, k_cv)
 }
 \value{
 A list with object:
-\code{class}: A vector of the predicted class Ŷ i for all observation.
+\code{class}: A vector of the predicted class ̂y hat i for all observation.
 \code{cv_err}: A numeric with the cross-validation misclassification error.
 }
 \description{

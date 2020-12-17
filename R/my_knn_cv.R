@@ -10,7 +10,7 @@
 #' @keywords prediction
 #'
 #' @return A list with object:
-#' `class`: A vector of the predicted class Ŷ i for all observation.
+#' `class`: A vector of the predicted class ̂y hat i for all observation.
 #' `cv_err`: A numeric with the cross-validation misclassification error.
 #'
 #' @examples
